@@ -3,7 +3,7 @@ echo "Kali Health Check"
 echo
 echo "Checking sources.list file..."
 if [ $(grep -v "#" /etc/apt/sources.list | sed '/^$/d' |wc -l) -ne 1 ]; then
-        echo "It was found a wrong number of repositories configured in your kali. {FAIL]"
+        echo "It was found a wrong number of repositories configured in your kali. [FAIL]"
         echo "Please check  this documentation: http://docs.kali.org/general-use/kali-linux-sources-list-repositories."
         echo "Any additional repositories added to the Kali sources.list file will most likely BREAK YOUR KALI LINUX INSTALL."
 else
