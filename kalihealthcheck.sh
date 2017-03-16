@@ -12,7 +12,7 @@ if [ $(grep -v "#" /etc/apt/sources.list | sed '/^$/d' |wc -l) -ne 1 ]; then
 	echo "+++++++++++++++++++++++++++ >> $logfile
 else
 echo "Checking the repositorie URL"
-if grep -q "deb http://http.kali.org/kali kali-rolling main contrib non-free" <<< $(grep -v "#" /etc/apt/sources.list | sed '/^$/d'); then
+if grep -q "deb http://http.kali.org/kali kali-rolling main contrib non-free" <<< $(grep -v "#" /etc/apt/sources.list | sed '/^$/d') || grep -q "deb http://http.kali.org/kali kali-rolling main non-free contrib" <<< $(grep -v "#" /etc/apt/sources.list | sed '/^$/d') ; then
 echo "The repositories seems to be ok. [OK]" | tee -a $logfile 
 else
 	echo "Please check this documentation: http://docs.kali.org/general-use/kali-linux-sources-list-repositories. [FAIL]" | tee -a $logfile
@@ -35,12 +35,12 @@ if  grep -q $(curl -s http.kali.org/kali/dists/ | grep  kali-rolling | sed '1d' 
 echo "Your Kali seems to be updated -[OK]" | tee -a $logfile
 tail -1 /var/log/apt/history.log | cut -b 11-21  >>  $logfile
 else
-	echo -n "Your Kali seems not be updated. Your last update was "
+	echo -n "Your Kali has a different update date. Your last update was "
 	echo -n $(tail -1 /var/log/apt/history.log | cut -b 11-21)
 	echo -n " and the last update in the repositorie was "
 	echo -n $(curl -s http.kali.org/kali/dists/ | grep  kali-rolling | sed '1d' | sed -e 's/<[^>]*>//g' | cut -b 14-23)
 	echo .
-	echo "Please consider to update it. [MANUAL CHECK]"
+	echo "Please consider to double check it. [MANUAL CHECK]"
 	echo "++++++++++LAST UPDATE++++++++++" >> $logfile
         tail -1 /var/log/apt/history.log | cut -b 11-21  >>  $logfile
         echo "+++++++++++++++++++++++++++" >> $logfile
