@@ -6,30 +6,29 @@ export repos=('/etc/apt/sources.list')
 export docs=('http://docs.kali.org/general-use/kali-linux-sources-list-repositories')
 export kernel=("$(uname -v | awk '{print$4}')" "curl -sL http://pkg.kali.org/linux | awk '/version:/ {getline;print$1}'")
 clear
-sleep 0.125
 printf '\e[4m\e[1m%s\n\e[0m' "Kali Health Check"
-sleep 1
+
 printf '%s\n' "[-] Checking sources.list file..." | tee $logfile
 
 if [[ -s "$repos" ]] && [[ "$(grep -v '#' /etc/apt/sources.list | sed '/^$/d' | wc -l)" != 1 ]] ;
 then
 	printf '\e[91m\e[1m%s\n\e[0m' "Non-standard repository configuration detected. - [FAIL]" | tee -a $logfile
-	sleep 0.125
+	
 	printf '%s\n' "Please check this documentation: "$repos"."
-	sleep 0.125
+	
 	printf '%s\n' "Any additional repositories added to Kali's sources.list file will most likely BREAK YOUR INSTALL."
-	sleep 0.125
+	
 	printf '%s\n' "++++++++++SOURCES++++++++++" >> $logfile
 	cat               /etc/apt/sources.list     >> $logfile
 	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
 else
 	printf '%s\n' "[-] Checking repository URL..."
-	sleep 0.125
+	
 	if grep -q "deb http://http.kali.org/kali kali-rolling main contrib non-free" <<< "$(grep -v '#' /etc/apt/sources.list | sed '/^$/d')" ||
 	   grep -q "deb http://http.kali.org/kali kali-rolling main non-free contrib" <<< "$(grep -v '#' /etc/apt/sources.list | sed '/^$/d')" ;
 	then
 		printf '\e[92m\e[1m%s\n\e[0m' "Standard repository configuration detected. - [PASS]" | tee -a $logfile
-		sleep 0.125
+		
 	else
 		printf '\e[91m\e[1m%s\n\e[0m' "Non-standard repository configuration detected. - [FAIL]" | tee -a $logfile
 		printf '%s\n' "Please check this documentation: http://docs.kali.org/general-use/kali-linux-sources-list-repositories."
