@@ -10,7 +10,6 @@ sleep 0.125
 printf '\e[4m\e[1m%s\n\e[0m' "Kali Health Check"
 sleep 1
 printf '%s\n' "[-] Checking sources.list file..." | tee $logfile
-sleep 0.125
 
 if [[ -s "$repos" ]] && [[ "$(grep -v '#' /etc/apt/sources.list | sed '/^$/d' | wc -l)" != 1 ]] ;
 then
@@ -33,18 +32,14 @@ else
 		sleep 0.125
 	else
 		printf '\e[91m\e[1m%s\n\e[0m' "Non-standard repository configuration detected. - [FAIL]" | tee -a $logfile
-		sleep 0.125
 		printf '%s\n' "Please check this documentation: http://docs.kali.org/general-use/kali-linux-sources-list-repositories."
-		sleep 0.125
 		printf '%s\n' "Any additional repositories added to Kali's sources.list file will most likely BREAK YOUR INSTALL."
-		sleep 0.125
 		printf '%s\n' "++++++++++SOURCES++++++++++" >> $logfile
 		cat               /etc/apt/sources.list     >> $logfile
 		printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
 
 		printf '%s\n' "Do you want to restore your repository configuration's default settings? [y/n]."
-		sleep 0.125
-
+		
 		read -n 1 -r -s restore
 		case "$restore" in
 			y)
@@ -55,7 +50,6 @@ else
 				EOF
 
 				printf '%s\n' "Restoring file: '/etc/apt/sources.list', to default." | tee -a $logfile
-				sleep 3
 				printf '%s\n' "Done."
 				;;
 			n)
@@ -69,14 +63,14 @@ else
 fi
 
 printf '%s\n' "[-] Checking kernel..." | tee -a $logfile
-sleep 1
+
 if grep -q "$(curl -s http://pkg.kali.org/pkg/linux | grep -A 1 version: | sed '1d' | sed 's/ //g')" <<< "$(uname -v)" ;
 then
 	printf '\e[92m%s\n\e[0m' "Latest kernel detected. - [PASS]" | tee -a $logfile
-	sleep 0.125
+	
 else
 	printf '\e[91m\e[1m%s\n\e[0m' "Latest kernel not detected. - [FAIL]" | tee -a $logfile
-	sleep 0.125
+	5
 printf 'Consider running \e[1m%s\e[0m to get up to date.\n' "$update"
 	printf '%s\n' "++++++++++KERNEL+++++++++++" >> $logfile
 	uname -a                                    >> $logfile
