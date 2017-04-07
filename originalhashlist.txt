@@ -1,0 +1,6 @@
+d6b0e47fc6b05ff21626e087376b2fde7fab1a33  /usr/share/metasploit-framework/lib/snmp/ber.rb
+4af08de3529fd8b2067475c12b63ced5d78e8596  /usr/share/metasploit-framework/lib/snmp/pdu.rb
+9c63557fb96dc07e4e642924c8391aa0668e4253  /usr/share/metasploit-framework/lib/snmp/agent.rb
+2be7e7caedd3ef44bbfcb62d3a2f9f9fb7579366  /usr/share/metasploit-framework/lib/snmp/mib.rb
+8fa8a5986b3bcbde403828d94bd3100f54caed28  /usr/share/metasploit-framework/lib/snmp/varbind.rb
+9e4e10b08444c28cb508c6f08c9a00bdc92a7ff7  /usr/share/metasploit-framework/lib/snmp/manager.rb
