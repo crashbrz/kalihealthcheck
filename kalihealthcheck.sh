@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export logfile=kalicheck.txt
+export logfile=kalicheck.log
 export update=('apt update && apt upgrade' 'apt-get update && apt-get dist-upgrade')
 export repos=('/etc/apt/sources.list')
 export docs=('http://docs.kali.org/general-use/kali-linux-sources-list-repositories')
@@ -65,7 +65,7 @@ else
 fi
 
 printf '%s\n' "[-] Checking kernel..." | tee -a $logfile
-sleep 1
+
 if grep -q "$(curl -s http://pkg.kali.org/pkg/linux | grep -A 1 version: | sed '1d' | sed 's/ //g')" <<< "$(uname -v)" ;
 then
 	printf '\e[92m%s\n\e[0m' "Latest kernel detected. - [PASS]" | tee -a $logfile
@@ -91,6 +91,11 @@ else
         tail -1 /var/log/apt/history.log | cut -b 11-21  >> $logfile
         printf '%s\n' "+++++++++++++++++++++++++++"      >> $logfile
 fi
+
+printf '%s\n' "[-] Fetching Mirror list..." | tee -a $logfile
+curl -sI http://http.kali.org/README  >> $logfile
+curl -sI http://http.kali.org/README  | grep -i  "MirrorBrain" 
+printf '%s\n' "+++++++++++++++++++++++++++" | tee -a $logfile
 
 printf '\e[91m\e[1m%s\n\e[0m' "Would you like to perform a deep checking ***EXPERIMENTAL and TAKES A LONG TIME - 64bit only [y/N]." 
 read -n 1 -r -s choice
