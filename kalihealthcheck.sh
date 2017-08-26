@@ -73,7 +73,12 @@ else
 	printf '\e[91m\e[1m%s\n\e[0m' "Latest kernel not detected. - [FAIL]" | tee -a $logfile
 printf 'Consider running \e[1m%s\e[0m to get up to date.\n' "$update"
 	printf '%s\n' "++++++++++KERNEL+++++++++++" >> $logfile
-	uname -a                                    >> $logfile
+	printf '%s\n' "Current machine kernel" >> $logfile
+	uname -a >> $logfile
+	printf '%s\n' "Last kernel in repo:" >> $logfile
+	echo $kernel >>$logfile
+	
+	
 	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
 fi
 
@@ -96,31 +101,44 @@ printf '%s\n' "[-] Fetching Mirror list..." | tee -a $logfile
 curl -sI http://http.kali.org/README  >> $logfile
 curl -sI http://http.kali.org/README  | grep -i  "MirrorBrain" 
 printf '%s\n' "+++++++++++++++++++++++++++" | tee -a $logfile
+
+printf '%s\n' "[-] Checking disk usage..." | tee -a $logfile
+df -h| grep -vE '^Filesystem|cdrom|tmpfs' | awk '{ print $5 " " $1 }' | while read dfoutput;
+do
+  part=$(echo $dfoutput | awk '{ print $2 }' )
+  usage=$(echo $dfoutput | awk '{ print $1}' | cut -d'%' -f1  )
+    if [ $usage -ge 90 ]; then
+        printf '\e[91m\e[1m%s\n\e[0m' "Please consider to clean your particion $part. Disk usage above $usage% - [FAIL]" | tee -a $logfile
+ fi 
+ if [ $usage -le 90 ]; then
+        printf '\e[92m%s\n\e[0m' "Disk usage is $usage% in $part - [PASS]" | tee -a $logfile
+ fi   
+done
 #Thanks muts for the suggestion 
-	printf '%s\n' "[-] Collecting system logs..." | tee -a $logfile
-	printf '\e[91m\e[1m%s\n\e[0m' "Please, consider to clear the logs(/var/log/messages /var/log/kern.log /var/log/syslog /var/log/user.log), reproduce the bug and run this script again to better locate the issue." | tee -a $logfile
-	sleep 1
-	printf '%s\n' "++++++++++LOG: MESSAGES+++++++++++" >> $logfile
-	cat /var/log/messages >> $logfile
-	printf '%s\n' "[-] MESSAGES - [DONE"] | tee -a $logfile
-	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
-	printf '%s\n' "++++++++++LOG: KERN.LOG+++++++++++" >> $logfile
-	cat /var/log/kern.log >> $logfile
-	printf '%s\n' "[-] KERN.LOG - [DONE"] | tee -a $logfile
-	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
-	printf '%s\n' "++++++++++LOG: SYSLOG+++++++++++" >> $logfile
-	cat /var/log/syslog >> $logfile
-	printf '%s\n' "[-] SYSLOG - [DONE"] | tee -a $logfile
-	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
-	printf '%s\n' "++++++++++LOG: USER.LOG+++++++++++" >> $logfile
-	cat /var/log/user.log >> $logfile
-	printf '%s\n' "[-] USERLOG - [DONE"] | tee -a $logfile
-	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
-	printf '%s\n' "[-] Collecting system info..." | tee -a $logfile
-	printf '%s\n' "++++++++++DMESG+++++++++++" >> $logfile
-	dmesg >> $logfile
-	printf '%s\n' "[-] DMESG - [DONE"] | tee -a $logfile
-	printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
+printf '%s\n' "[-] Collecting system logs..." | tee -a $logfile
+printf '\e[91m\e[1m%s\n\e[0m' "Please, consider to clear the logs(/var/log/messages /var/log/kern.log /var/log/syslog /var/log/user.log), reproduce the bug and run this script again to better locate the issue." | tee -a $logfile
+sleep 1
+printf '%s\n' "++++++++++LOG: MESSAGES+++++++++++" >> $logfile
+cat /var/log/messages >> $logfile
+printf '%s\n' "[-] MESSAGES - [DONE"] | tee -a $logfile
+printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
+printf '%s\n' "++++++++++LOG: KERN.LOG+++++++++++" >> $logfile
+cat /var/log/kern.log >> $logfile
+printf '%s\n' "[-] KERN.LOG - [DONE"] | tee -a $logfile
+printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
+printf '%s\n' "++++++++++LOG: SYSLOG+++++++++++" >> $logfile
+cat /var/log/syslog >> $logfile
+printf '%s\n' "[-] SYSLOG - [DONE"] | tee -a $logfile
+printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
+printf '%s\n' "++++++++++LOG: USER.LOG+++++++++++" >> $logfile
+cat /var/log/user.log >> $logfile
+printf '%s\n' "[-] USERLOG - [DONE"] | tee -a $logfile
+printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
+printf '%s\n' "[-] Collecting system info..." | tee -a $logfile
+printf '%s\n' "++++++++++DMESG+++++++++++" >> $logfile
+dmesg >> $logfile
+printf '%s\n' "[-] DMESG - [DONE"] | tee -a $logfile
+printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
 
 printf '\e[91m\e[1m%s\n\e[0m' "Would you like to perform a deep checking ***EXPERIMENTAL and TAKES A LONG TIME - 64bit only [y/N]." 
 read -n 1 -r -s choice
