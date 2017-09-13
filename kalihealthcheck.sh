@@ -140,8 +140,8 @@ dmesg >> $logfile
 printf '%s\n' "[-] DMESG - [DONE"] | tee -a $logfile
 printf '%s\n' "+++++++++++++++++++++++++++" >> $logfile
 
-printf '\e[91m\e[1m%s\n\e[0m' "Would you like to perform a deep checking ***EXPERIMENTAL and TAKES A LONG TIME - 64bit only [y/N]." 
-read -n 1 -r -s choice
+# printf '\e[91m\e[1m%s\n\e[0m' "Would you like to perform a deep checking ***EXPERIMENTAL and TAKES A LONG TIME - 64bit only [y/N]." 
+# read -n 1 -r -s choice
 if [[ "$choice" != *[yY]* ]] ;
 then
 	printf '%s\n' "Deep checking skipped" | tee -a $logfile
