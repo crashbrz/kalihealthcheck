@@ -10,6 +10,8 @@ export dirlist=dislist.txt
 export filelist=filelist.txt
 export hc=/usr/bin/sha1sum
 export originalhashlist=originalhashlist.txt
+export memory=$(free -h | grep "Mem:" |awk '{ print $2 " "}')
+export req_memory=2.0
 clear
 rm -f  originalhashlist 2> /dev/null
 printf '\e[4m\e[1m%s\n\e[0m' "Kali Health Check"
@@ -114,6 +116,18 @@ do
         printf '\e[92m%s\n\e[0m' "Disk usage is $usage% in $part - [PASS]" | tee -a $logfile
  fi   
 done
+
+printf '%s\n' "[-] Checking memory amount..." | tee -a $logfile
+memory_aux=${memory:0:-2}
+printf '%s\n' "[*] Current memory amount:$memory" | tee -a $logfile
+printf '%s\n' "[*] Required memory amount:$req_memory"G | tee -a $logfile
+
+if [ ${memory_aux%.*} -eq ${req_memory%.*} ] && [ ${memory_aux#*.} \> ${req_memory#*.} ] || [ ${memory_aux%.*} -gt ${req_memory%.*} ]; then
+  printf '\e[92m%s\n\e[0m' "Minimum memory requirement satisfied - [PASS]" | tee -a $logfile
+else
+  printf '\e[91m\e[1m%s\n\e[0m' "Minimum memory requirement NOT satisfied - [FAIL]" | tee -a $logfile
+fi
+
 #Thanks muts for the suggestion 
 printf '%s\n' "[-] Collecting system logs..." | tee -a $logfile
 printf '\e[91m\e[1m%s\n\e[0m' "Please, consider to clear the logs(/var/log/messages /var/log/kern.log /var/log/syslog /var/log/user.log), reproduce the bug and run this script again to better locate the issue." | tee -a $logfile
