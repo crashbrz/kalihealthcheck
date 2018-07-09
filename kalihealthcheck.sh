@@ -71,9 +71,13 @@ printf '%s\n' "[-] Checking kernel..." | tee -a $logfile
 if grep -q "$(curl -s http://pkg.kali.org/pkg/linux | grep -A 1 version: | sed '1d' | sed 's/ //g')" <<< "$(uname -v)" ;
 then
 	printf '\e[92m%s\n\e[0m' "Latest kernel detected. - [PASS]" | tee -a $logfile
+        printf '\e[92m\e[1m%s\n\e[0m' "Current kernel: $(uname -v | awk '{print$4}')" | tee -a $logfile
+
 else
 	printf '\e[91m\e[1m%s\n\e[0m' "Latest kernel not detected. - [FAIL]" | tee -a $logfile
-printf 'Consider running \e[1m%s\e[0m to get up to date.\n' "$update"
+	printf '\e[91m\e[1m%s\n\e[0m' "Current repo kernel:"  $kernel | tee -a $logfine
+        printf '\e[91m\e[1m%s\n\e[0m' "Current machine kernel:" "$(uname -v)" | tee -a $logfine
+	printf 'Consider running \e[1m%s\e[0m to get up to date.\n' "$update"
 	printf '%s\n' "++++++++++KERNEL+++++++++++" >> $logfile
 	printf '%s\n' "Current machine kernel" >> $logfile
 	uname -a >> $logfile
