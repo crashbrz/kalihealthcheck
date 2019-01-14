@@ -68,7 +68,7 @@ fi
 
 printf '%s\n' "[-] Checking kernel..." | tee -a $logfile
 
-if grep -q "$(curl -s http://pkg.kali.org/pkg/linux | grep -A 1 version: | sed '1d' | sed 's/ //g')" <<< "$(uname -v)" ;
+if grep -q "$(curl -s http://pkg.kali.org/pkg/linux | grep -A 1 version: | sed '1d' | sed 's/ //g' | sed 's/<[^>]*>//g')" <<< "$(uname -v)" ;
 then
 	printf '\e[92m%s\n\e[0m' "Latest kernel detected. - [PASS]" | tee -a $logfile
         printf '\e[92m\e[1m%s\n\e[0m' "Current kernel: $(uname -v | awk '{print$4}')" | tee -a $logfile
